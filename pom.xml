@@ -14,7 +14,59 @@
             <artifactId>javassist</artifactId>
             <version>3.25.0-GA</version>
         </dependency>
+        <dependency>
+            <groupId>io.earcam.wrapped</groupId>
+            <artifactId>com.sun.tools.attach</artifactId>
+            <version>1.8.0_jdk8u172-b11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.maven</groupId>
+            <artifactId>tomcat7-maven-plugin</artifactId>
+            <version>2.2</version>
+        </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <!-- get all project dependencies -->
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <!-- MainClass in mainfest make a executable jar -->
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.faith.InjectEvalCode.InjectAgent</mainClass>
+                        </manifest>
+                                                <manifestEntries>
+                                                    <Agent-Class>com.faith.InjectEvalCode.InjectAgent</Agent-Class>
+                                                    <Can-Redefine-Classes>true</Can-Redefine-Classes>
+                                                    <Can-Retransform-Classes>true</Can-Retransform-Classes>
+                                                    <Can-Set-Native-Method-Prefix>true</Can-Set-Native-Method-Prefix>
+                                                </manifestEntries>
+                    </archive>
+
+
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <!-- bind to the packaging phase -->
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+    </build>
+
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
